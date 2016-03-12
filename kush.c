@@ -22,7 +22,6 @@ int main(void)
   pid_t child;            		/* process id of the child process */
   int status;           		/* result from execv system call*/
   int shouldrun = 1;
-	
   int i, upper;
 		
   while (shouldrun){            		/* Program terminates normally inside setup */
@@ -34,6 +33,29 @@ int main(void)
       shouldrun = 0;     /* Exiting from kush*/
 
     if (shouldrun) {
+          child = fork();
+          
+          // Child Process starts here
+          if(child == 0){
+            //child process should find the path of invoked command and call execv() with that path as argument
+            execv(args[0],args);  
+            printf("Command %s is unknown!\n",args[0]);
+            exit(0);
+          }
+          // Parent Process starts here
+          else{
+            if(background == 0){
+              printf("Foreground process %d is started",child);
+              waitpid(child,NULL,NULL);
+              printf("Foreground process %d is completed",child);
+            } else if (background == 1){
+              //What to do when child is running on background?
+              printf("Background process %d is started",child);
+
+            }
+          
+
+          }
       /*
 	After reading user input, the steps are 
 	(1) Fork a child process using fork()
